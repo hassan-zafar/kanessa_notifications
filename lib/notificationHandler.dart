@@ -7,38 +7,67 @@ import 'package:http/http.dart' as http;
 
 import 'main.dart';
 
-Future<Map<String, dynamic>?> sendAndRetrieveMessage(
-    {
-      // required String token,
-    required String message,
-    required BuildContext context,
-    String? imageUrl,
-    required String title}) async {
+Future<Map<String, dynamic>?> sendAndRetrieveMessage({
+  // required String token,
+  required String message,
+  required BuildContext context,
+  String? imageUrl,
+  required String title,
+}) async {
   final String serverToken =
       "AAAACwTfCj4:APA91bEOcuQEIZtyywS3Ur5vVRmr3NKYijTE69EaHOaRGk8-rDK_hyoRVDCvAjdbueAmxPsUfjqylwZohqYpbKZseZboE5iRsXABDBGyxhtlGfBDhsXHw0JhHTMNS9Q5D5f7ZkpHpdN-";
   // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  FirebaseMessaging.instance.subscribeToTopic("kanessa_channel");
+  // await http
+  //     .post(
+  //       Uri.parse('https://fcm.googleapis.com/fcm/send'),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'key=$serverToken',
+  //       },
+  //       body: jsonEncode(
+  //         <String, dynamic>{
+  //           'notification': <String, dynamic>{
+  //             'body': message,
+  //             'title': '$title',
+  //             imageUrl == null ? "" : "image": imageUrl
+  //           },
+  //           'priority': 'high',
+  //           'data': <String, dynamic>{
+  //             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+  //             'id': '1',
+  //             'status': 'done'
+  //           },
+  //           "android": {
+  //             "restricted_package_name": "com.hassan.kanessa",
+  //             "notification": {
+  //               "icon": 'test_icon',
+  //               "color": '#f45342',
+  //             },
+  //           },
+  //           'to': "/topics/kanessa_channel",
+  //         },
+  //       ),
+  //     )
+  //     .then((value) => print("Notification Sent"));
 
   await http
       .post(
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'key=$serverToken',
+          'Authorization': 'Bearer $serverToken',
         },
         body: jsonEncode(
           <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': message,
-              'title': '$title',
-              imageUrl == null ? "" : "image": imageUrl
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
-              'status': 'done'
-            },
-            'to': "topics/kanessa_channel",
+            "message": {
+              "topic": "kanessa_channel",
+              "notification": {
+                "title": "Breaking News",
+                "body": "New news story available."
+              },
+              "data": {"story_id": "story_12345"}
+            }
           },
         ),
       )
@@ -75,7 +104,9 @@ Future<Map<String, dynamic>?> sendAndRetrieveMessage(
               content: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(notification.body!)],
+                  children: [
+                    Text(notification.body!),
+                  ],
                 ),
               ),
             );

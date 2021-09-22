@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.instance.subscribeToTopic("kanessa_channel");
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
@@ -41,18 +43,19 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Kanessa Notifications',
+      title: 'Kanessa Notifications', builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        primaryColor: Color(0xff96B7BF),
+        primaryColor: Color(0xffCFB15E),
         accentColor: Color(0xffDEEEFE),
-        scaffoldBackgroundColor: Colors.transparent,
-        appBarTheme: AppBarTheme(color: Color(0xff96B7BF)),
-        canvasColor: Colors.transparent,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
+        buttonColor: Color(0xffCFB15E),
+        canvasColor: Colors.white,
       ),
       home: AnimatedSplashScreen(
         splashIconSize: 140,
@@ -64,7 +67,7 @@ class MyApp extends StatelessWidget {
             )),
         animationDuration: Duration(seconds: 1),
         centered: true,
-        backgroundColor: Color(0xff96B7BF),
+        // backgroundColor: Color(0xff96B7BF),
         //Color(0xff387A53),
         nextScreen: HomeScreen(),
         duration: 1,
